@@ -1,0 +1,9 @@
+com/csaszi/util/HibernateUtil.class
+com/csaszi/test/QueryTesting.class
+com/csaszi/entities/TTlszMkNMapEntity.class
+com/csaszi/entities/THeaderEntity.class
+com/csaszi/test/HibernateTutorial.class
+com/csaszi/entities/TTestEntity.class
+com/csaszi/entities/TWorkDataEntity.class
+com/csaszi/test/EntityManagerTest.class
+com/csaszi/entities/TTlszMkNMapEntityPK.class

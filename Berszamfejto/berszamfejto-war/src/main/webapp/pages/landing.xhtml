@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:menu style="margin-left: 40px;margin-top: 40px">
+            <p:submenu label="#{res['com.csaszi.landing.productSheet.label']}">
+                <p:menuitem value="#{res['com.csaszi.landing.productSheet.submenu.handling']}"
+                            action="#{navigator.navigateTo}"
+                            icon="fa fa-list">
+                    <f:param name="page"
+                             value="#{res['com.csaszi.pages.productSheet']}?faces-redirect=true"/>
+                </p:menuitem>
+                <p:menuitem value="#{res['com.csaszi.landing.productSheet.submenu.deleteAll']}"
+                            action="#{landing.deleteAllDataFormDatabaseAndResetSequences}"
+                            oncomplete="remoteScriptEndState()"
+                            icon="fa fa-refresh">
+                    <p:confirm header="Delete data from database"
+                               message="Are you sure?"
+                               icon="ui-icon-alert"/>
+                </p:menuitem>
+                <p:menuitem value="#{res['com.csaszi.landing.productSheet.submenu.scriptRunner']}"
+                            onclick="PF('scriptDialog').show();"
+                            icon="fa fa-empire">
+
+                </p:menuitem>
+            </p:submenu>
+            <p:submenu label="#{res['com.csaszi.landing.reports.label']}">
+                <p:menuitem value="#{res['com.csaszi.landing.reports.submenu']}"
+                            actionListener="#{reportGenerator.generateXLSX}"
+                            update="growl"
+                            icon="fa fa-stack-overflow">
+                </p:menuitem>
+            </p:submenu>
+        </p:menu>
+
+        <p:accordionPanel activeIndex=""
+                          style="margin-left: 40px;
+                                 margin-top: 10px;
+                                 margin-right: 40px">
+            <p:tab title="Folyamat leírás" >
+                <h:panelGrid columns="1" cellpadding="10">
+                    <h:outputText value="1. Összes törlése - ekkor kezdesz új bérszámfejtés." />
+                    <h:outputText value="2. Script futtatása - hogy legyenek terméklapok" />
+                    <h:outputText value="3. Felvétel/módosítás - jobb egér és munkaadatok felvétele"/>
+                    <h:outputText value="4. Riport generálás"/>
+                </h:panelGrid>
+            </p:tab>
+        </p:accordionPanel>
+
+        <p:confirmDialog global="true" showEffect="explode" hideEffect="explode">
+            <p:commandButton value="#{res['com.csaszi.common.yes']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="#{res['com.csaszi.common.no']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+        <p:dialog header="Script futtatása"
+                  widgetVar="scriptDialog" focus="path">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{res['com.csaszi.landing.scriptDialog.path']}"
+                               for="path"
+                               style="color: orange;"/>
+                <p:inputText id="path"
+                             value="#{landing.path}"
+                             onkeypress="if (event.keyCode == 13) {
+                                         remoteScriptStartState();
+                                         remoteScriptRunner();
+                                         return false;}">
+                    <p:ajax event="keyup" process="@this"/>
+                </p:inputText>
+            </h:panelGrid>
+
+            <p:remoteCommand name="remoteScriptStartState"
+                             actionListener="#{landing.showStartState}"
+                             update="growl"/>
+            <p:remoteCommand name="remoteScriptEndState"
+                             actionListener="#{landing.showEndState}"
+                             update="growl"/>
+            <p:remoteCommand name="remoteScriptRunner"
+                             actionListener="#{landing.runScript}"
+                             update="growl"/>
+
+        </p:dialog>
+
+        <!--<p:panelGrid>-->
+            <!--<p:graphicImage value="#{landing.image}">-->
+                <!--<f:param id="imageId" name="image_id" value="image.id"/>-->
+            <!--</p:graphicImage>-->
+        <!--</p:panelGrid>-->
+
+    </h:form>
+</h:body>
+
+</html>

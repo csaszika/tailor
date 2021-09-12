@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="berszamfejto-ear" />
+        <module name="berszamfejto-ejb" />
+        <module name="berszamfejto-ejb-interface" />
+        <module name="berszamfejto-persistence" />
+        <module name="berszamfejto-persistence-util" />
+        <module name="berszamfejto-war" />
+        <module name="berszamfejto-war-util" />
+        <module name="persistence" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="1.7">
+      <module name="Berszamfejto" target="1.5" />
+      <module name="berszamfejto-ear" target="1.7" />
+      <module name="berszamfejto-ejb" target="1.7" />
+      <module name="berszamfejto-ejb-interface" target="1.7" />
+      <module name="berszamfejto-persistence" target="1.7" />
+      <module name="berszamfejto-persistence-util" target="1.7" />
+      <module name="berszamfejto-war" target="1.7" />
+      <module name="berszamfejto-war-util" target="1.7" />
+      <module name="persistence" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

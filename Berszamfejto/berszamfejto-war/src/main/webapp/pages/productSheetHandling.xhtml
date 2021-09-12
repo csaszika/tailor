@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true" sticky="true"/>
+
+        <p:focus id="focusSum" for="sumLabel"/>
+        <p:focus id="focusTlsz" for="tlszLabel"/>
+
+        <p:panelGrid id="grid"
+                     style="margin-top: 20px"
+                     columns="2">
+            <p:outputLabel value="#{res['com.csaszi.productSheet.productSheetNumber.label']}"
+                           for="tlszLabel"
+                           style="font-size: medium;
+                                  color: orange;"/>
+            <p:inputText id="tlszLabel"
+                         value="#{productSheetHandlingFormBean.tlsz}"
+                         onkeypress="if (event.keyCode == 13) {
+                                         changeFocusToSum();
+                                         return false;}">
+                <p:ajax event="keyup" process="@this"/>
+            </p:inputText>
+
+            <p:outputLabel value="#{res['com.csaszi.productSheet.sum.label']}"
+                           for="sumLabel"
+                           style="font-size: medium;
+                                  color: orange"/>
+            <p:inputText id="sumLabel"
+                         value="#{productSheetHandlingFormBean.sum}"
+                         onkeypress="if (event.keyCode == 13) {
+                                         insert();
+                                         return false;}">
+                <!-- Sum always 0 on first time-->
+                <p:ajax event="keyup" process="@this"/>
+            </p:inputText>
+        </p:panelGrid>
+
+        <!-- Validation errors -->
+        <p:message for="tlszLabel"/>
+        <p:message for="sumLabel"/>
+        <!-- Remote command for inputtexts -->
+        <p:remoteCommand name="changeFocusToSum"
+                         update=":form:focusSum"/>
+        <p:remoteCommand name="insert"
+                         action="#{productSheetHandlingFormBean.insert}"
+                         update="growl"
+                         process="@this"/>
+
+        <!-- Datatable -->
+        <p:dataTable id="productSheets" var="productSheet" editable="true"
+                     value="#{productSheetHandlingTableBean.productSheets}"
+                     scrollable="true" scrollHeight="380"
+                     selection="#{productSheetHandlingTableBean.selectedEntity}"
+                     selectionMode="single"
+                     rowKey="#{productSheet.headerId}"
+                     style="margin-top: 30px; margin-bottom: 15px; width: 500px" >
+            <f:facet name="header">Product sheets</f:facet>
+
+            <p:ajax event="rowEdit" listener="#{productSheetHandlingTableBean.onRowEdit}"
+                    update="form:growl" />
+            <p:ajax event="rowEditCancel"
+                    listener="#{productSheetHandlingTableBean.onRowCancel}"
+                    update="form:growl" />
+
+            <p:column headerText="#{res['com.csaszi.productSheet.productSheetNumber']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{productSheet.tlsz}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{productSheet.tlsz}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="#{res['com.csaszi.productSheet.sum']}"
+                      style="width: auto; color: limegreen; font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{productSheet.sum}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{productSheet.sum}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <p:column style="width:20px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+
+        <!-- Context menu for datatable-->
+        <p:contextMenu for="productSheets">
+            <p:menuitem value="Work data"
+                        action="#{productSheetHandlingTableBean.navigateTo}"
+                        icon="fa fa-fw fa-list">
+                <f:param name="page" value="#{res['com.csaszi.pages.workData']}?faces-redirect=true"/>
+            </p:menuitem>
+            <p:menuitem value="#{res['com.csaszi.common.delete']}"
+                        update="productSheets growl"
+                        icon="ui-icon-close"
+                        actionListener="#{productSheetHandlingTableBean.remove}">
+                <p:confirm header="Delete the product sheet"
+                           message="Are you sure?"
+                           icon="ui-icon-alert"/>
+            </p:menuitem>
+        </p:contextMenu>
+
+        <p:confirmDialog global="true" showEffect="explode" hideEffect="explode">
+            <p:commandButton value="#{res['com.csaszi.common.yes']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-yes"
+                             icon="ui-icon-check" />
+            <p:commandButton value="#{res['com.csaszi.common.no']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-no"
+                             icon="ui-icon-close" />
+        </p:confirmDialog>
+
+        <!-- Back to previous page-->
+        <p:commandButton value="#{res['com.csaszi.common.back']}"
+                         action="#{navigator.navigateTo}">
+            <f:param name="page" value="#{res['com.csaszi.pages.landing']}?faces-redirect=true"/>
+        </p:commandButton>
+
+    </h:form>
+</h:body>
+
+</html>

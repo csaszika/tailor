@@ -1,0 +1,5 @@
+/home/csaszika/folder/work/Berszamfejto/berszamfejto-ejb-interface/src/main/java/com/csaszi/sqlScriptRunner/SqlScriptRunnerRemote.java
+/home/csaszika/folder/work/Berszamfejto/berszamfejto-ejb-interface/src/main/java/com/csaszi/packageCaller/PackageCallerBeanRemote.java
+/home/csaszika/folder/work/Berszamfejto/berszamfejto-ejb-interface/src/main/java/com/csaszi/workData/WorkDataSessionBeanRemote.java
+/home/csaszika/folder/work/Berszamfejto/berszamfejto-ejb-interface/src/main/java/com/csaszi/productSheet/ProductSheetSessionBeanRemote.java
+/home/csaszika/folder/work/Berszamfejto/berszamfejto-ejb-interface/src/main/java/com/csaszi/generalQuery/GeneralQuerySessionBeanRemote.java

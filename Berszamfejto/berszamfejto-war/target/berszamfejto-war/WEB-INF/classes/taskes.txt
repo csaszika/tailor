@@ -1,0 +1,8 @@
+
+work data message if sum(db) > product DB
+
+general query in query session bean with and without parameters in single method
+
+redirect true or false? pro-contra
+
+http request for report generation or for something

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="ear" name="berszamfejto-ear:ear">
+    <output-path>$PROJECT_DIR$/berszamfejto-ear/target</output-path>
+    <root id="archive" name="berszamfejto-ear-1.0.ear">
+      <element id="artifact" artifact-name="berszamfejto-ear:ear exploded" />
+    </root>
+  </artifact>
+</component>

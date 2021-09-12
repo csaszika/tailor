@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
+  <component name="FlexCompilerConfiguration">
+    <option name="GENERATE_FLEXMOJOS_CONFIGS" value="false" />
+  </component>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="javaeeApplication" url="file://$PROJECT_DIR$/berszamfejto-ear" />
+    <file type="web" url="file://$PROJECT_DIR$/berszamfejto-war" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/berszamfejto-persistence-util/pom.xml" />
+        <option value="$PROJECT_DIR$/berszamfejto-persistence/pom.xml" />
+        <option value="$PROJECT_DIR$/berszamfejto-war-util/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectResources">
+    <resource url="http://java.sun.com/jsf/html" location="$APPLICATION_HOME_DIR$/plugins/jsp/lib/jsp-impl.jar" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="false" project-jdk-name="1.7" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

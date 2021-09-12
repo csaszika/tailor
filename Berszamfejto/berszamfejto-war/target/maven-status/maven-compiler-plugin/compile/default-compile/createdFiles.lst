@@ -1,0 +1,15 @@
+com/csaszi/trash/WordGenerationTutorial.class
+com/csaszi/reportGenerator/ReportGenerator.class
+com/csaszi/login/Login.class
+com/csaszi/themeSwitcher/ThemeBean.class
+com/csaszi/reportGenerator/subReportGenerators/WorkerSheets.class
+com/csaszi/workDataHandling/WorkDataHandlingFormBean.class
+com/csaszi/trash/ResourceBundleApp.class
+com/csaszi/abstractClasses/AbstractBean.class
+com/csaszi/landing/Landing.class
+com/csaszi/workDataHandling/WorkDataHandlingTableBean.class
+com/csaszi/productSheetHandling/ProductSheetHandlingFormBean.class
+com/csaszi/reportGenerator/subReportGenerators/TlszSheet.class
+com/csaszi/productSheetHandling/ProductSheetHandlingTableBean.class
+com/csaszi/abstractClasses/AbstractFormBean.class
+com/csaszi/abstractClasses/AbstractTableBean.class

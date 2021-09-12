@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.csaszi</groupId>
+        <artifactId>top-module</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>berszamfejto-ear</artifactId>
+    <version>1.0</version>
+    <packaging>ear</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.csaszi</groupId>
+            <artifactId>berszamfejto-war</artifactId>
+            <version>1.0</version>
+            <type>war</type>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.csaszi</groupId>-->
+            <!--<artifactId>berszamfejto-persistence</artifactId>-->
+            <!--<version>1.0</version>-->
+            <!--<type>jar</type>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.csaszi</groupId>
+            <artifactId>berszamfejto-ejb</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.csaszi</groupId>
+            <artifactId>berszamfejto-ejb-interface</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>2.10.1</version>
+                <configuration>
+                    <finalName>MyEarFile</finalName>
+                    <modules>
+                        <webModule>
+                            <groupId>com.csaszi</groupId>
+                            <artifactId>berszamfejto-war</artifactId>
+                            <uri>berszamfejto-war.war</uri>
+                            <bundleFileName>berszamfejto-war.war</bundleFileName>
+                            <contextRoot>/berszamfejto-web</contextRoot>
+                        </webModule>
+                        <!--<jarModule>-->
+                            <!--<groupId>com.csaszi</groupId>-->
+                            <!--<artifactId>berszamfejto-persistence</artifactId>-->
+                        <!--</jarModule>-->
+                        <jarModule>
+                            <groupId>com.csaszi</groupId>
+                            <artifactId>berszamfejto-ejb</artifactId>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>com.csaszi</groupId>
+                            <artifactId>berszamfejto-ejb-interface</artifactId>
+                        </jarModule>
+                    </modules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <compilerVersion>1.7</compilerVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+</project>

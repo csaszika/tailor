@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true" life="2000"/>
+        <p:messages id="messages" for="amountInput"
+                    showDetail="true" autoUpdate="true"
+                    closable="true"/>
+
+        <p:focus id="focusMk" for="mkInput"/>
+        <p:focus id="focusDb" for="amountInput"/>
+        <p:focus id="focusNorm" for="normInput"/>
+        <p:focus id="focusWorker" for="vnCodeInput"/>
+
+        <p:panelGrid id="panelGrid"
+                     style="margin-top: 20px; margin-bottom: 15px"
+                     columns="3">
+            <p:outputLabel value="#{res['com.csaszi.workData.worker.label']}"
+                           for="vnCodeInput"
+                           style="font-size: medium;
+                                  color: orange;"/>
+            <p:inputText id="vnCodeInput"
+                         value="#{workDataHandlingFormBean.vnCode}"
+                         onkeypress="if (event.keyCode == 13) {
+                                         changeFocusToMk();
+                                         return false;}"
+                         style="width: 400px"
+                         onfocus="this.select()">
+                <p:ajax event="keyup"
+                        update="vnCount growl"
+                        listener="#{workDataHandlingFormBean.updateVnCodes}"/>
+            </p:inputText>
+            <p:outputLabel id="vnCount"
+                           value="#{workDataHandlingFormBean.vnCount}"
+                           style="color: orange"/>
+
+            <p:outputLabel value="#{res['com.csaszi.workData.opertionalCode.label']}"
+                           for="mkInput"
+                           style="font-size: medium;
+                                  color: orange;"/>
+            <p:inputText id="mkInput"
+                         value="#{workDataHandlingFormBean.mkCode}"
+                         onkeypress="if (event.keyCode == 13) {
+                                         changeFocusToDb();
+                                         return false;}"
+                         style="width: 400px"
+                         onfocus="this.select()">
+                <p:ajax event="keyup"
+                        update="mkCount"
+                        listener="#{workDataHandlingFormBean.updateMkCodes}"/>
+            </p:inputText>
+            <p:outputLabel id="mkCount"
+                           value="#{workDataHandlingFormBean.mkCount}"
+                           style="color: orange"/>
+
+            <p:outputLabel value="#{res['com.csaszi.workData.amount.label']}"
+                           for="amountInput"
+                           style="font-size: medium;
+                                  color: orange;"/>
+            <p:inputText id="amountInput"
+                         value="#{workDataHandlingFormBean.amount}"
+                         onkeypress="if (event.keyCode == 13) {
+                                         changeFocusToNorm();
+                                         return false;}"
+                         style="width: 400px"
+                         onfocus="this.select()">
+                <p:ajax event="keyup"
+                        update="amountCount"
+                        listener="#{workDataHandlingFormBean.updateAmounts}"/>
+            </p:inputText>
+            <p:outputLabel id="amountCount"
+                           value="#{workDataHandlingFormBean.amountCount}"
+                           style="color: orange"/>
+
+            <p:outputLabel value="#{res['com.csaszi.workData.norm.label']}"
+                           for="normInput"
+                           style="font-size: medium;
+                                  color: orange;"/>
+            <p:inputText id="normInput"
+                         value="#{workDataHandlingFormBean.norm}"
+                         onkeypress="if (event.keyCode == 13) {
+                                         insert();
+                                         refresh();
+                                         return false;}"
+                         style="width: 400px"
+                         onfocus="this.select()">
+                <!-- Norm always 0 on first time-->
+                <p:ajax event="keyup" process="@this"
+                        update="normCount"
+                        listener="#{workDataHandlingFormBean.updateNorms}"/>
+            </p:inputText>
+            <p:outputLabel id="normCount"
+                           value="#{workDataHandlingFormBean.normCount}"
+                           style="color: orange"/>
+        </p:panelGrid>
+
+        <!-- Remote command for inputtexts -->
+        <p:remoteCommand name="changeFocusToMk"
+                         update=":form:focusMk"/>
+        <p:remoteCommand name="changeFocusToDb"
+                         update=":form:focusDb"/>
+        <p:remoteCommand name="changeFocusToNorm"
+                         update=":form:focusNorm"/>
+        <p:remoteCommand name="insert"
+                         actionListener="#{workDataHandlingFormBean.insert}"
+                         update="form:panelGrid growl"/>
+        <p:remoteCommand name="refresh"
+                         action="#{workDataHandlingTableBean.init}"
+                         update="form:workDatas form:focusWorker form:messages"
+                         resetValues="true"/>
+
+        <p:panelGrid id="panelGridButtons"
+                     columns="2">
+            <p:commandButton value="#{res['com.csaszi.common.back']}"
+                             action="#{navigator.navigateTo}">
+                <f:param name="page" value="#{res['com.csaszi.pages.productSheet']}?faces-redirect=true"/>
+            </p:commandButton>
+
+            <p:commandButton value="#{res['com.csaszi.common.validation']}"
+                             actionListener="#{workDataHandlingTableBean.checkData}"
+                             update="form:dataCheckReport"
+                             oncomplete="PF('validationResultDialog').show();"/>
+        </p:panelGrid>
+
+        <p:dialog header="Validálás eredménye"
+                  widgetVar="validationResultDialog"
+                  style="width: 300px; white-space: normal">
+            <p:outputLabel id="dataCheckReport"
+                           value="#{workDataHandlingTableBean.dataCheckingReport}"
+                           style="display: block;width: 220px"
+                           escape="false"/>
+        </p:dialog>
+
+
+        <p:dataTable id="workDatas" var="workData" editable="true"
+                     value="#{workDataHandlingTableBean.workDatas}"
+                     selection="#{workDataHandlingTableBean.selectedEntity}"
+                     selectionMode="single"
+                     scrollable="true" scrollHeight="320"
+                     rowKey="#{workData.workDataId}"
+                     sortBy="#{workData.mk}"
+                     style="margin-top: 10px; margin-bottom: 10px; width: 500px" >
+            <f:facet name="header">
+                Work data for product sheet #{workDataHandlingTableBean.headerEntity.tlsz}
+                <p:outputLabel id="rowCount"
+                               value="#{workDataHandlingTableBean.numberOfWorkData}"
+                               style="font-size: medium;
+                                      color: orange;
+                                      float: right"/>
+            </f:facet>
+
+            <p:ajax event="rowEdit" listener="#{workDataHandlingTableBean.onRowEdit}"
+                    update="form:growl" />
+            <p:ajax event="rowEditCancel"
+                    listener="#{workDataHandlingTableBean.onRowCancel}"
+                    update="form:growl" />
+
+            <p:column headerText="#{res['com.csaszi.workData.worker']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{workData.worker}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{workData.worker}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="#{res['com.csaszi.workData.opertionCode']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{workData.mk}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{workData.mk}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="#{res['com.csaszi.workData.amount']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{workData.db}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{workData.db}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="#{res['com.csaszi.workData.norm']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{workData.norm}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{workData.norm}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column style="width:32px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+
+        <!-- Context menu for datatable-->
+        <p:contextMenu for="workDatas">
+            <p:menuitem value="#{res['com.csaszi.common.delete']}"
+                        update="workDatas growl"
+                        icon="ui-icon-close"
+                        actionListener="#{workDataHandlingTableBean.remove}">
+                <p:confirm header="Delete the work data"
+                           message="Are you sure?"
+                           icon="ui-icon-alert"/>
+            </p:menuitem>
+        </p:contextMenu>
+
+        <p:confirmDialog global="true" showEffect="explode" hideEffect="explode">
+            <p:commandButton value="#{res['com.csaszi.common.yes']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="#{res['com.csaszi.common.no']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</h:body>
+</html>

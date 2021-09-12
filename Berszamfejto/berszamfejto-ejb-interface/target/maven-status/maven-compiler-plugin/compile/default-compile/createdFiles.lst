@@ -1,0 +1,5 @@
+com/csaszi/packageCaller/PackageCallerBeanRemote.class
+com/csaszi/workData/WorkDataSessionBeanRemote.class
+com/csaszi/productSheet/ProductSheetSessionBeanRemote.class
+com/csaszi/generalQuery/GeneralQuerySessionBeanRemote.class
+com/csaszi/sqlScriptRunner/SqlScriptRunnerRemote.class

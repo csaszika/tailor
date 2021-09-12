@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Berszamfejto.iml" filepath="$PROJECT_DIR$/Berszamfejto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berszamfejto-ear/berszamfejto-ear.iml" filepath="$PROJECT_DIR$/berszamfejto-ear/berszamfejto-ear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berszamfejto-ejb/berszamfejto-ejb.iml" filepath="$PROJECT_DIR$/berszamfejto-ejb/berszamfejto-ejb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berszamfejto-ejb-interface/berszamfejto-ejb-interface.iml" filepath="$PROJECT_DIR$/berszamfejto-ejb-interface/berszamfejto-ejb-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berszamfejto-persistence/berszamfejto-persistence.iml" filepath="$PROJECT_DIR$/berszamfejto-persistence/berszamfejto-persistence.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berszamfejto-war/berszamfejto-war.iml" filepath="$PROJECT_DIR$/berszamfejto-war/berszamfejto-war.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berszamfejto-war-util/berszamfejto-war-util.iml" filepath="$PROJECT_DIR$/berszamfejto-war-util/berszamfejto-war-util.iml" />
+    </modules>
+  </component>
+</project>

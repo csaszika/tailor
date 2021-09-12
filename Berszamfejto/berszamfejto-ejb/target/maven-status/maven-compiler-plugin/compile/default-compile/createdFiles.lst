@@ -1,0 +1,7 @@
+com/csaszi/sessionBeans/productSheetSessionBean/ProductSheetSessionBean.class
+com/csaszi/sessionBeans/workDataSessionBean/WorkDataSessionBean.class
+com/csaszi/queryEnums/QueryEnumerations.class
+com/csaszi/queryEnums/QueryParameterEnums.class
+com/csaszi/packageCaller/PackageCallerBean.class
+com/csaszi/sqlScriptRunner/SqlScriptRunner.class
+com/csaszi/generalQuery/GeneralQuerySessionBean.class
