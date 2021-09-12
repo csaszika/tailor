@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="termeklapkeszito-ear" />
+        <module name="termeklapkeszito-ejb" />
+        <module name="termeklapkeszito-ejb-interface" />
+        <module name="termeklapkeszito-persistence" />
+        <module name="termeklapkeszito-war" />
+        <module name="termeklapkeszito-war-util" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="termeklapkeszito-ear" target="1.7" />
+      <module name="termeklapkeszito-ejb" target="1.7" />
+      <module name="termeklapkeszito-ejb-interface" target="1.7" />
+      <module name="termeklapkeszito-persistence" target="1.7" />
+      <module name="termeklapkeszito-top" target="1.5" />
+      <module name="termeklapkeszito-war" target="1.7" />
+      <module name="termeklapkeszito-war-util" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

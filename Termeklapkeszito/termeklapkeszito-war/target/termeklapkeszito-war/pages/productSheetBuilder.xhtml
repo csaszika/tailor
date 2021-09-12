@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head/>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true" life="10000" escape="false"/>
+
+        <p:tabView id="tabView">
+            <p:ajax event="tabChange"
+                    listener="#{productSheetBuilder.onTabChange}"
+                    update=":form:growl"/>
+
+            <p:tab id="header"
+                   title="#{res['com.csaszi.productSheetBuilder.header.tab']}"
+                   titleStyle="color: orange">
+                <p:panelGrid id="panelGridHeader"
+                             style="margin-top: 20px;
+                                    margin-bottom: 20px"
+                             columns="2">
+
+                    <!-- TLSZ -->
+                    <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.productSheetNum.label']}"
+                                   for="nextTlsz"
+                                   style="font-size: medium;
+                                                  color: orange;"/>
+                    <p:outputLabel id="nextTlsz"
+                                   value="#{productSheetBuilder.nextTlsz}"
+                                   style="color: orange"/>
+
+                    <!-- CUSTOMER  -->
+                    <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.customer.label']}"
+                                   for="customer"
+                                   style="font-size: medium;
+                                                  color: orange;"/>
+                    <p:selectOneMenu id="customer"
+                                     converter="#{customerConverter}"
+                                     valueChangeListener="#{productSheetBuilder.onCustomerToProductSheetChange}">
+                        <f:selectItem itemLabel="Válassz" noSelectionOption="true"/>
+                        <f:selectItems value="#{productSheetBuilder.customers}"
+                                       var="customerToProductSheet"
+                                       itemLabel="#{customerToProductSheet.customerName}"
+                                       itemValue="#{customerToProductSheet}"/>
+                        <p:ajax event="change" process="@this"
+                                update="form:tabView:customerFinal customer form:tabView:currentCustomer" immediate="true"/>
+                    </p:selectOneMenu>
+
+                    <!-- PRODUCT -->
+                    <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.product.label']}"
+                                   for="product"
+                                   style="font-size: medium;
+                                          color: orange;"/>
+                    <p:inputText id="product"
+                                 value="#{productSheetBuilder.product}"
+                                 onfocus="this.select()">
+                        <p:ajax process="@this"
+                                update="form:tabView:productFinal"/>
+                    </p:inputText>
+
+                    <!-- START DATE -->
+                    <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.startDate.label']}"
+                                   for="startDate"
+                                   style="font-size: medium;
+                                                  color: orange;"/>
+                    <p:outputLabel id="startDate"
+                                   value="#{productSheetBuilder.startDate}"
+                                   style="color: orange">
+                        <f:convertDateTime type="date" pattern="MM.dd"/>
+                    </p:outputLabel>
+
+                    <!-- AMOUNT -->
+                    <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.amount.label']}"
+                                   for="amount"
+                                   style="font-size: medium;
+                                                  color: orange;"/>
+                    <p:inputText id="amount"
+                                 value="#{productSheetBuilder.amount}"
+                                 onfocus="this.select()">
+                        <p:ajax process="@this"
+                                update="form:tabView:amountFinal"/>
+                    </p:inputText>
+                </p:panelGrid>
+            </p:tab>
+            <p:tab id="templateChoice"
+                   title="#{res['com.csaszi.productSheetBuilder.templateChoice.tab']}"
+                   titleStyle="color: orange">
+                <p:panelGrid id="panelGridTemplateChoice"
+                             style="margin-top: 20px;
+                                            margin-bottom: 20px"
+                             columns="2">
+
+                    <!-- CUSTOMER  -->
+                    <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.customer.label']}"
+                                   for="customerFilter"
+                                   style="font-size: medium;
+                                          color: orange;"/>
+                    <p:selectOneMenu id="customerFilter"
+                                     onchange="submit()"
+                                     style="width: 300px"
+                                     converter="#{customerConverter}" valueChangeListener="#{productSheetBuilder.onCustomerFilterChange}">
+                        <f:selectItem itemLabel="Válassz"
+                                      itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productSheetBuilder.customers}"
+                                       var="customerForFilter"
+                                       itemLabel="#{customerForFilter.customerName}"
+                                       itemValue="#{customerForFilter}"/>
+                    </p:selectOneMenu>
+
+                    <!-- TEMPLATE  -->
+                    <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.template.label']}"
+                                   for="chosenTemplate"
+                                   style="font-size: medium;
+                                          color: orange;"/>
+                    <p:selectOneMenu id="chosenTemplate"
+                                     style="width: 300px"
+                                     converter="#{templateConverter}" valueChangeListener="#{productSheetBuilder.onTemplateChange}">
+                        <f:selectItem itemLabel="Válassz"
+                                      itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productSheetBuilder.templates}"
+                                       var="template"
+                                       itemLabel="#{template.templateName}"
+                                       itemValue="#{template}"/>
+                        <p:ajax update="form:tabView:actionsDataTable form:growl"
+                                process="@this"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+            </p:tab>
+            <p:tab id="actions"
+                   title="#{res['com.csaszi.productSheetBuilder.actions.tab']}"
+                   titleStyle="color: orange">
+
+                <p:dataTable id="actionsDataTable"
+                             value="#{productSheetBuilder.actions}"
+                             var="action"
+                             selection="#{productSheetBuilder.selectedActions}"
+                             scrollable="true" scrollHeight="400"
+                             rowKey="#{action.actionId}"
+                             rowSelectMode="checkbox"
+                             style="margin-top: 15px;
+                                    margin-bottom: 15px;
+                                    width: 600px">
+
+                    <p:ajax event="rowSelectCheckbox"
+                            listener="#{productSheetBuilder.onRowSelect}"
+                            update=":form:growl :form:tabView:templateSaver" />
+                    <p:ajax event="rowUnselectCheckbox"
+                            listener="#{productSheetBuilder.onRowUnselect}"
+                            update=":form:growl :form:tabView:templateSaver" />
+
+                    <f:facet name="header">Műveletek</f:facet>
+
+                    <p:column id="checkBoxes" selectionMode="multiple"
+                              style="width:16px; text-align:center"/>
+
+                    <p:column headerText="#{res['com.csaszi.productSheetBuilder.actionName.column']}"
+                              style="width: auto;
+                                     color: limegreen;
+                                     font-size: medium">
+                        <h:outputText value="#{action.actionName}"
+                                      style="color: darkorange"/>
+                    </p:column>
+
+                </p:dataTable>
+
+                <!-- New action persisting -->
+                <p:commandButton id="actionSaver"
+                                 value="#{res['com.csaszi.common.newAction']}"
+                                 onclick="PF('newActionDialog').show();"
+                                 process="@this"
+                                 type="button"
+                                 style="margin-bottom: 5px"/>
+                <p:dialog header="Új művelet felvétele"
+                          widgetVar="newActionDialog"
+                          position="150,200"
+                          resizable="false">
+                    <p:panelGrid id="panelGridNewActionDialog"
+                                 columns="2">
+                        <!-- Action type -->
+                        <p:outputLabel for="actionTypeForNewAction"
+                                       value="#{res['com.csaszi.productSheetBuilder.newActionDialog.actionType.label']}"/>
+                        <p:selectOneMenu id="actionTypeForNewAction"
+                                         converter="#{actionTypeConverter}" valueChangeListener="#{productSheetBuilder.onActionTypeFilterChange}">
+                            <f:selectItem itemLabel="Válassz"
+                                          itemValue="#{null}"
+                                          noSelectionOption="true"/>
+                            <f:selectItems value="#{productSheetBuilder.actionTypes}"
+                                           var="actionTypeFilter"
+                                           itemLabel="#{actionTypeFilter.actionTypeName}"
+                                           itemValue="#{actionTypeFilter}"/>
+                            <p:ajax process="@this" event="change"/>
+                        </p:selectOneMenu>
+                        <!-- New action name -->
+                        <p:outputLabel for="newActionName"
+                                       value="#{res['com.csaszi.productSheetBuilder.newActionDialog.action.label']}" />
+                        <p:inputText id="newActionName"
+                                     value="#{productSheetBuilder.newActionName}">
+                            <p:ajax event="keyup" process="@this"/>
+                        </p:inputText>
+                    </p:panelGrid>
+                    <p:commandButton id="actionSave"
+                                     value="#{res['com.csaszi.productSheetBuilder.actionSave.button']}"
+                                     action="#{productSheetBuilder.saveAction}"
+                                     style="margin-top: 5px"
+                                     update="form:growl"
+                                     process="@this"/>
+                </p:dialog>
+            </p:tab>
+            <p:tab id="summary"
+                   title="#{res['com.csaszi.productSheetBuilder.summary.tab']}"
+                   titleStyle="color: orange">
+
+                <p:panelGrid columns="2"
+                             style="margin-top: 10px;">
+                    <p:panelGrid id="panelGridFinalProperties"
+                                 style="margin-bottom: 280px;
+                                                width: 80px"
+                                 columns="2">
+                        <!-- TLSZ -->
+                        <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.productSheetNum.label']}"
+                                       for="tlszFinal"
+                                       style="font-size: medium;
+                                                  color: orange;"/>
+                        <p:outputLabel id="tlszFinal"
+                                       value="#{productSheetBuilder.nextTlsz}"/>
+
+                        <!-- CUSTOMER  -->
+                        <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.customer.label']}"
+                                       for="customerFinal"
+                                       style="font-size: medium;
+                                                  color: orange;"/>
+                        <p:outputLabel id="customerFinal"
+                                       value="#{productSheetBuilder.customerToProductSheet.customerName}"/>
+
+                        <!-- PRODUCT -->
+                        <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.product.label']}"
+                                       for="productFinal"
+                                       style="font-size: medium;
+                                                  color: orange;"/>
+                        <p:outputLabel id="productFinal"
+                                       value="#{productSheetBuilder.product}"/>
+
+                        <!-- START DATE -->
+                        <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.startDate.label']}"
+                                       for="startDateFinal"
+                                       style="font-size: medium;
+                                                  color: orange;"/>
+                        <p:outputLabel id="startDateFinal"
+                                       value="#{productSheetBuilder.startDate}">
+                            <f:convertDateTime pattern="MM.dd" timeZone="GMT+1"/>
+                        </p:outputLabel>
+
+                        <!-- AMOUNT -->
+                        <p:outputLabel value="#{res['com.csaszi.productSheetBuilder.amount.label']}"
+                                       for="amountFinal"
+                                       style="font-size: medium;
+                                                  color: orange;"/>
+                        <p:outputLabel id="amountFinal"
+                                       value="#{productSheetBuilder.amount}"/>
+
+                    </p:panelGrid>
+
+                    <!-- Table for check and fill norms -->
+                    <p:dataTable id="tempActionsTable" var="tempAction"
+                                 editable="true"
+                                 value="#{productSheetBuilder.tempActions}"
+                                 scrollable="true" scrollHeight="350"
+                                 selection="#{productSheetBuilder.selectedTempActionEntity}"
+                                 selectionMode="single"
+                                 editMode="cell"
+                                 draggableRows="true"
+                                 rowKey="#{tempAction.pk.actionEntity}"
+                                 style="width: 550px;
+                                                height: 320px" >
+
+                        <f:facet name="header">Műveletek</f:facet>
+
+                        <p:ajax event="rowReorder"
+                                listener="#{productSheetBuilder.onRowReorder}"
+                                update=":form:growl"/>
+
+                        <p:ajax event="cellEdit"
+                                listener="#{productSheetBuilder.onCellEdit}"
+                                process="@this"
+                                oncomplete="refreshFooter()"/>
+                        <!--DataTable footer updater -->
+                        <p:remoteCommand name="refreshFooter"
+                                         update="tempActionsTable:normSum tempActionsTable"/>
+
+                        <p:column headerText="#{res['com.csaszi.productSheetBuilder.action.column']}"
+                                  style="width: auto;
+                                     color: limegreen;
+                                     font-size: medium">
+                            <p:outputLabel value="#{tempAction.pk.actionEntity.actionName}"
+                                           style="color: orange"/>
+                        </p:column>
+
+                        <p:column headerText="#{res['com.csaszi.productSheetBuilder.norm.column']}"
+                                  style="width: auto;
+                                     color: limegreen;
+                                     font-size: medium">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{tempAction.norm}"
+                                                  style="color: darkorange"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{tempAction.norm}"
+                                                 style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            Total:
+                            <p:outputLabel id="normSum"
+                                           value="#{productSheetBuilder.sumOfNorms}"
+                                           style="font-size: medium;
+                                              color: orange;
+                                              float: right"/>
+                        </f:facet>
+
+                    </p:dataTable>
+
+                    <!--DataTable footer updater -->
+                    <p:remoteCommand id="refreshRemote"
+                                     name="refreshFooter"
+                                     update=":form:tabView:tempActionsTable :form:tabView:tempActionsTable:normSum templateSaver"/>
+
+                    <!-- Button set -->
+                    <p:toolbar id="toolbarButtonSet">
+                        <f:facet name="left">
+                            <!-- Template persisting -->
+                            <p:commandButton id="templateSaver" value="#{res['com.csaszi.common.save']}"
+                                             onclick="PF('templateSaverDialog').show();"
+                                             process="@this"
+                                             type="button"
+                                             icon="ui-icon-disk"
+                                             disabled="#{productSheetBuilder.templateSaved}"/>
+
+                            <p:dialog header="Új minta felvétele"
+                                      widgetVar="templateSaverDialog"
+                                      position="900,300"
+                                      resizable="false"
+                                      focus="newTemplateName">
+                                <p:panelGrid id="panelGridNewTemplateDialog"
+                                             columns="2">
+                                    <p:outputLabel for="currentCustomer"
+                                                   value="#{res['com.csaszi.productSheetBuilder.customer.label']}"/>
+                                    <p:outputLabel id="currentCustomer"
+                                                   value="#{productSheetBuilder.customerToProductSheet.customerName}"/>
+
+                                    <p:outputLabel for="newTemplateName"
+                                                   value="#{res['com.csaszi.productSheetBuilder.template.label']}" />
+                                    <p:inputText id="newTemplateName"
+                                                 value="#{productSheetBuilder.newTemplateName}">
+                                        <p:ajax event="keyup" process="@this"/>
+                                    </p:inputText>
+                                </p:panelGrid>
+                                <p:commandButton id="saveTemplate"
+                                                 value="#{res['com.csaszi.productSheetBuilder.templateSave.button']}"
+                                                 action="#{productSheetBuilder.saveTemplate}"
+                                                 style="margin-top: 5px"
+                                                 update="form:growl templateSaver"
+                                                 process="@this"/>
+                            </p:dialog>
+
+                            <!-- Product sheet generating -->
+                            <p:commandButton value="#{res['com.csaszi.common.generate']}"
+                                             process="@this"
+                                             actionListener="#{productSheetGenerator.generateProductSheet}"
+                                             icon="ui-icon-print"
+                                             update="form:growl"
+                                             oncomplete="restartMechanism()">
+                                <p:ajax listener="#{productSheetBuilder.setTemplateSaved(false)}"/>
+                            </p:commandButton>
+
+                            <p:remoteCommand name="restartMechanism"
+                                             actionListener="#{productSheetBuilder.restartMechanism}"
+                                             update="form:tabView:nextTlsz form:tabView:actionsDataTable form:tabView:tempActionsTable form:tabView:tlszFinal form:tabView:customerFinal form:tabView:product form:tabView:productFinal form:tabView:amount form:tabView:amountFinal form:tabView:customer form:tabView:customerFilter form:tabView:chosenTemplate">
+                                <p:resetInput target="form:tabView:customer form:tabView:customerFilter form:tabView:chosenTemplate form:tabView:customerFinal"/>
+                            </p:remoteCommand>
+                        </f:facet>
+                    </p:toolbar>
+                </p:panelGrid>
+            </p:tab>
+        </p:tabView>
+
+        <!-- Back button -->
+        <p:commandButton value="#{res['com.csaszi.common.backToMain']}"
+                         action="#{navigator.navigateTo}"
+                         style="margin-top: 5px">
+            <p:confirm header="Kilépés"
+                       message="Biztos ki akarsz lépni? Ha kilépsz elveszíted a nem mentett munkádat!"
+                       icon="ui-icon-alert"/>
+            <f:param name="page" value="#{res['com.csaszi.pages.landing']}?faces-redirect=true"/>
+        </p:commandButton>
+
+        <p:confirmDialog global="true" showEffect="explode" hideEffect="explode">
+            <p:commandButton value="#{res['com.csaszi.common.yes']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-yes"
+                             icon="ui-icon-check" />
+            <p:commandButton value="#{res['com.csaszi.common.no']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-no"
+                             icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</h:body>
+</html>

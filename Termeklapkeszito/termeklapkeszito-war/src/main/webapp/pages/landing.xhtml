@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body style="background-color: purple">
+    <h:form>
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:menu style="margin-left: 40px; margin-top: 40px">
+            <p:submenu label="#{res['com.csaszi.landing.productSheet.label']}">
+                <p:menuitem value="#{res['com.csaszi.landing.productSheetMaker.submenu']}"
+                            action="#{navigator.navigateTo}"
+                            icon="fa fa-scissors">
+                    <f:param name="page"
+                             value="#{res['com.csaszi.pages.productSheetBuilder']}?faces-redirect=true"/>
+                </p:menuitem>
+            </p:submenu>
+
+            <p:submenu label="#{res['com.csaszi.landing.template.label']}">
+                <p:menuitem value="#{res['com.csaszi.landing.template.submenu']}"
+                            action="#{navigator.navigateTo}"
+                            icon="fa fa-stack-overflow">
+                    <f:param name="page"
+                             value="#{res['com.csaszi.pages.template']}?faces-redirect=true"/>
+                </p:menuitem>
+            </p:submenu>
+
+            <p:submenu label="#{res['com.csaszi.landing.action.label']}"
+                       rendered="#{landing.administrator}">
+                <p:menuitem value="#{res['com.csaszi.landing.actionMaker.actionType.submenu']}"
+                            action="#{navigator.navigateTo}"
+                            icon="fa fa-list-ul">
+                    <f:param name="page"
+                             value="#{res['com.csaszi.pages.actionType']}?faces-redirect=true"/>
+                </p:menuitem>
+            </p:submenu>
+
+            <p:submenu label="#{res['com.csaszi.landing.customer.label']}">
+                <p:menuitem value="#{res['com.csaszi.landing.customer.submenu']}"
+                            action="#{navigator.navigateTo}"
+                            icon="fa fa-list">
+                    <f:param name="page"
+                             value="#{res['com.csaszi.pages.customer']}?faces-redirect=true"/>
+                </p:menuitem>
+            </p:submenu>
+        </p:menu>
+
+        <!-- Back to previous page-->
+        <p:commandButton value="#{res['com.csaszi.common.backToLogin']}"
+                         action="#{navigator.navigateTo}"
+                         style="margin-left: 40px; margin-top: 20px">
+            <f:param name="page" value="#{res['com.csaszi.pages.login']}?faces-redirect=true"/>
+        </p:commandButton>
+        <p:commandButton value="Maci" rendered="#{false}"
+                         action="#{landing.generateAllSheets}"
+                         style="margin-left: 40px; margin-top: 20px">
+        </p:commandButton>
+
+    </h:form>
+</h:body>
+
+</html>

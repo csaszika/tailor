@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:focus id="focusActionName" for="actionName"/>
+
+        <p:panelGrid id="panelGrid"
+                     style="margin-top: 20px;
+                            margin-bottom: 15px"
+                     columns="2">
+            <p:outputLabel value="#{res['com.csaszi.action.actionName.label']}"
+                           for="actionName"
+                           style="font-size: medium;
+                                  color: orange;"/>
+            <p:inputText id="actionName"
+                         value="#{actionFormBean.actionName}"
+                         onkeypress="if (event.keyCode == 13) {
+                                         insert();
+                                         refresh();
+                                         return false;}"
+                         onfocus="this.select()">
+                <p:ajax event="keyup" process="@this"/>
+            </p:inputText>
+        </p:panelGrid>
+
+        <!-- Remote commands -->
+        <p:remoteCommand name="insert"
+                         actionListener="#{actionFormBean.insert}"
+                         update="form:panelGrid growl"/>
+        <p:remoteCommand name="refresh"
+                         action="#{actionTableBean.init}"
+                         update="form:actions form:focusActionName"
+                         resetValues="true"/>
+
+        <!-- Datatable-->
+        <p:dataTable id="actions" var="action" editable="true"
+                     value="#{actionTableBean.actions}"
+                     rows="10" paginator="true"
+                     selection="#{actionTableBean.selectedEntity}"
+                     selectionMode="single"
+                     rowKey="#{action.actionId}"
+                     style="margin-top: 15px;
+                            margin-bottom: 15px; width: 600px">
+
+            <f:facet name="header">
+                #{actionFormBean.actionTypeEntity.actionTypeName} műveletek
+            </f:facet>
+
+            <p:ajax event="rowEdit" listener="#{actionTableBean.onRowEdit}"
+                    update="form:growl" />
+            <p:ajax event="rowEditCancel"
+                    listener="#{actionTableBean.onRowCancel}"
+                    update="form:growl" />
+
+            <p:column headerText="#{res['com.csaszi.action.actionName.column']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{action.actionName}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{action.actionName}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column style="width: 20px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+
+        <!-- Back button -->
+        <p:commandButton value="#{res['com.csaszi.common.back']}"
+                             action="#{navigator.navigateTo}">
+            <f:param name="page" value="#{res['com.csaszi.pages.actionType']}?faces-redirect=true"/>
+        </p:commandButton>
+
+    </h:form>
+</h:body>
+</html>

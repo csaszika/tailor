@@ -1,0 +1,10 @@
+com/csaszi/queryEnums/QueryEnumerations.class
+com/csaszi/queryEnums/QueryParameterEnums.class
+com/csaszi/remoteSessionBeans/CustomerSessionBean.class
+com/csaszi/remoteSessionBeans/AbstractSessionBean.class
+com/csaszi/remoteSessionBeans/QuerySessionBean.class
+com/csaszi/remoteSessionBeans/ProductSheetNumBean.class
+com/csaszi/remoteSessionBeans/TempActionSessionBean.class
+com/csaszi/remoteSessionBeans/ActionTypeSessionBean.class
+com/csaszi/remoteSessionBeans/ActionSessionBean.class
+com/csaszi/remoteSessionBeans/TemplateSessionBean.class

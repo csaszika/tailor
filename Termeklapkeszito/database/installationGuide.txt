@@ -1,0 +1,7 @@
+1. Run CreateDB.sql or reset.sql
+
+2. Run back_up_1.sql // old version
+
+3. Run patch_001.sql // actionNum column is deleted
+
+4. Run back_up_2.sql // newer version

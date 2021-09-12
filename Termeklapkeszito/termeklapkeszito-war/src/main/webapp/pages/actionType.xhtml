@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:dataTable id="actionTypes" var="actionType" editable="true"
+                     value="#{actionTypeTableBean.actionTypes}"
+                     rows="10" paginator="true"
+                     selection="#{actionTypeTableBean.selectedEntity}"
+                     selectionMode="single"
+                     rowKey="#{actionType.actionTypeId}"
+                     style="margin-top: 20px; margin-bottom: 20px; width: 500px" >
+            <f:facet name="header">Product sheets</f:facet>
+
+            <p:ajax event="rowEdit" listener="#{actionTypeTableBean.onRowEdit}"
+                    update="form:growl" />
+            <p:ajax event="rowEditCancel"
+                    listener="#{actionTypeTableBean.onRowCancel}"
+                    update="form:growl" />
+
+            <p:column headerText="#{res['com.csaszi.actionType.shortname.column']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <h:outputText value="#{actionType.actionTypeLetter}"
+                              style="color: darkorange"/>
+            </p:column>
+
+            <p:column headerText="#{res['com.csaszi.actionType.fullname.column']}"
+                      style="width: auto; color: limegreen; font-size: medium">
+                <h:outputText value="#{actionType.actionTypeName}"
+                              style="color: darkorange"/>
+            </p:column>
+        </p:dataTable>
+
+        <!-- Context menu for datatable-->
+        <p:contextMenu for="actionTypes">
+            <p:menuitem value="Műveletek"
+                        action="#{actionTypeTableBean.navigateTo}"
+                        icon="fa fa-fw fa-list">
+                <f:param name="page" value="#{res['com.csaszi.pages.action']}?faces-redirect=true"/>
+            </p:menuitem>
+        </p:contextMenu>
+
+        <!-- Back to previous page-->
+        <p:commandButton value="#{res['com.csaszi.common.back']}"
+                         action="#{navigator.navigateTo}">
+            <f:param name="page" value="#{res['com.csaszi.pages.landing']}?faces-redirect=true"/>
+        </p:commandButton>
+
+    </h:form>
+</h:body>
+</html>

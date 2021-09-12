@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="csaszi-JPA" transaction-type="JTA">
+    <!--<persistence-unit name="csaszi-JPA" >-->
+        <jta-data-source>java:/termeklapkeszitoDS</jta-data-source>
+        <class>com.csaszi.entities.TActionEntity</class>
+        <class>com.csaszi.entities.TActionTypeEntity</class>
+        <class>com.csaszi.entities.TCustomerEntity</class>
+        <class>com.csaszi.entities.TTemplateEntity</class>
+        <class>com.csaszi.entities.TempAction</class>
+        <class>com.csaszi.entities.TProductSheetNumEntity</class>
+        <!--<class>com.csaszi.entities.TempActionId</class>-->
+
+        <properties>
+            <!-- Hibernate -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+            <!--<property name="hibernate.show_sql" value="true"/>-->
+            <!--<property name="hibernate.format_sql" value="true"/>-->
+
+            <!-- Hibernate parameters
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@//localhost:1521"/>
+            <property name="hibernate.connection.driver_class" value="oracle.jdbc.OracleDriver"/>
+            <property name="hibernate.connection.username" value="csaszi"/>
+            <property name="hibernate.connection.password" value="123"/>-->
+            
+            <!-- JPA -->
+            <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@//localhost:1521" />
+            <property name="javax.persistence.jdbc.user" value="termeklapkeszito" />
+            <property name="javax.persistence.jdbc.password" value="123" />
+            <property name="hibernate.jdbc.fetch_size" value="50"/>
+        </properties>
+    </persistence-unit>
+</persistence>

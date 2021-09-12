@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="form" style="background-color: brown">
+        <p:growl id="growl" showDetail="true" sticky="true" />
+
+        <p:focus id="focusPassword" for="password"/>
+        <p:focus id="focusUsername" for="username"/>
+
+        <p:panelGrid style="margin: 250px auto;
+                            font-size: medium;"
+                     columns="2">
+            <p:outputLabel value="Username:" />
+            <p:inputText id="username"
+                         value="#{login.username}"
+                         required="true"
+                         onkeypress="if (event.keyCode == 13) {
+                                         changeFocusToPassword();
+                                         return false;}"/>
+
+            <p:outputLabel value="Password:"/>
+            <p:password id="password"
+                         value="#{login.password}"
+                         required="true"
+                         onkeypress="if (event.keyCode == 13) {
+                                         logMeIn();
+                                         return false;}">
+                <p:ajax event="keyup" process="@this"/>
+            </p:password>
+        </p:panelGrid>
+
+        <!-- Remote commands -->
+        <p:remoteCommand name="changeFocusToPassword"
+                         update=":form:focusPassword"/>
+        <p:remoteCommand name="logMeIn"
+                         action="#{login.logMeIn}"
+                         update="growl"/>
+    </h:form>
+</h:body>
+</html>

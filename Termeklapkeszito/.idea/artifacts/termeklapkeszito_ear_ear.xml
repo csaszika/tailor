@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="ear" name="termeklapkeszito-ear:ear">
+    <output-path>$PROJECT_DIR$/termeklapkeszito-ear/target</output-path>
+    <root id="archive" name="termeklapkeszito-ear-1.0.ear">
+      <element id="artifact" artifact-name="termeklapkeszito-ear:ear exploded" />
+    </root>
+  </artifact>
+</component>

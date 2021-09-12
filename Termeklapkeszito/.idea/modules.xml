@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/termeklapkeszito-ear/termeklapkeszito-ear.iml" filepath="$PROJECT_DIR$/termeklapkeszito-ear/termeklapkeszito-ear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/termeklapkeszito-ejb/termeklapkeszito-ejb.iml" filepath="$PROJECT_DIR$/termeklapkeszito-ejb/termeklapkeszito-ejb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/termeklapkeszito-ejb-interface/termeklapkeszito-ejb-interface.iml" filepath="$PROJECT_DIR$/termeklapkeszito-ejb-interface/termeklapkeszito-ejb-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/termeklapkeszito-persistence/termeklapkeszito-persistence.iml" filepath="$PROJECT_DIR$/termeklapkeszito-persistence/termeklapkeszito-persistence.iml" />
+      <module fileurl="file://$PROJECT_DIR$/termeklapkeszito-top.iml" filepath="$PROJECT_DIR$/termeklapkeszito-top.iml" />
+      <module fileurl="file://$PROJECT_DIR$/termeklapkeszito-war/termeklapkeszito-war.iml" filepath="$PROJECT_DIR$/termeklapkeszito-war/termeklapkeszito-war.iml" />
+      <module fileurl="file://$PROJECT_DIR$/termeklapkeszito-war-util/termeklapkeszito-war-util.iml" filepath="$PROJECT_DIR$/termeklapkeszito-war-util/termeklapkeszito-war-util.iml" />
+    </modules>
+  </component>
+</project>

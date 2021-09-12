@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="templateForm">
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:dataTable id="templatesTable" var="template" editable="true"
+                     value="#{templateTableBean.templates}"
+                     rows="10" paginator="true"
+                     selection="#{templateTableBean.selectedEntity}"
+                     selectionMode="single"
+                     rowKey="#{template.templateId}"
+                     style="margin-top: 20px; margin-bottom: 20px; width: 600px">
+            <f:facet name="header">Terméklap minták</f:facet>
+
+            <p:ajax event="rowEdit" listener="#{templateTableBean.onRowEdit}"
+                    update="templateForm:growl" />
+            <p:ajax event="rowEditCancel"
+                    listener="#{templateTableBean.onRowCancel}"
+                    update="templateForm:growl" />
+
+            <p:column headerText="#{res['com.csaszi.template.templateName.column']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{template.templateName}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{template.templateName}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="#{res['com.csaszi.template.customerName.column']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:outputLabel value="#{template.tCustomerByCustomerId.customerName}"
+                               style="color: orange"/>
+            </p:column>
+
+            <p:column style="width: 20px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+
+        <!-- Context menu for datatable-->
+        <p:contextMenu for="templatesTable">
+            <p:menuitem value="Szerkesztés"
+                        action="#{templateTableBean.navigateTo}"
+                        icon="fa fa-fw fa-list">
+                <f:param name="page" value="#{res['com.csaszi.pages.templateBuilder']}?faces-redirect=true"/>
+            </p:menuitem>
+            <p:menuitem value="#{res['com.csaszi.common.delete']}"
+                        actionListener="#{templateTableBean.remove}"
+                        update="templatesTable growl"
+                        icon="ui-icon-close">
+                <p:confirm header="Minta törlése"
+                           message="Biztos törölni akarod?"
+                           icon="ui-icon-alert"/>
+            </p:menuitem>
+        </p:contextMenu>
+
+        <p:confirmDialog global="true" showEffect="explode" hideEffect="explode">
+            <p:commandButton value="#{res['com.csaszi.common.yes']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-yes"
+                             icon="ui-icon-check" />
+            <p:commandButton value="#{res['com.csaszi.common.no']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-no"
+                             icon="ui-icon-close" />
+        </p:confirmDialog>
+
+        <p:panelGrid id="panelGridButtons"
+                     columns="2"
+                     style="margin-top: 5px">
+            <!-- New template -->
+            <p:commandButton value="#{res['com.csaszi.common.newTemplate']}"
+                             action="#{templateFormBean.navigateTo}">
+                <f:param name="page" value="#{res['com.csaszi.pages.templateBuilder']}?faces-redirect=true"/>
+            </p:commandButton>
+            <!-- Back to previous page-->
+            <p:commandButton value="#{res['com.csaszi.common.back']}"
+                             action="#{navigator.navigateTo}">
+                <f:param name="page" value="#{res['com.csaszi.pages.landing']}?faces-redirect=true"/>
+            </p:commandButton>
+        </p:panelGrid>
+
+    </h:form>
+</h:body>
+</html>

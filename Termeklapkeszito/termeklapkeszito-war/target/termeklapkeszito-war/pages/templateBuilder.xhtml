@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head/>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true" life="4000" escape="false"/>
+
+        <p:tabView id="tabView">
+            <p:ajax event="tabChange"
+                    listener="#{templateBuilderFormBean.onTabChange}"
+                    update=":form:growl"/>
+            <p:tab id="data"
+                   title="#{res['com.csaszi.template.data.tab']}"
+                   titleStyle="color: orange"
+                   rendered="#{templateBuilderFormBean.newTemplateEntity}">
+                <p:panelGrid id="panelGridData"
+                             style="margin-top: 20px;
+                                    margin-bottom: 20px"
+                             columns="2">
+
+                    <!-- CUSTOMER  -->
+                    <p:outputLabel value="#{res['com.csaszi.templateBuilder.customer.label']}"
+                                   for="customers"
+                                   style="font-size: medium;
+                                          color: orange;"/>
+                    <p:selectOneMenu id="customers"
+                                     style="width: 80px"
+                                     converter="#{customerConverter}"
+                                     value="#{templateBuilderFormBean.customerEntity}">
+                        <p:ajax listener="#{templateBuilderFormBean.onCustomerChange}" update=":form:growl"/>
+                        <f:selectItem itemLabel="Válassz"
+                                      itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{templateBuilderFormBean.customers}"
+                                       var="customer"
+                                       itemLabel="#{customer.customerName}"
+                                       itemValue="#{customer}"/>
+                    </p:selectOneMenu>
+
+                    <!-- TEMPLATE  -->
+                    <p:outputLabel value="#{res['com.csaszi.templateBuilder.templateName.label']}"
+                                   for="template"
+                                   style="font-size: medium;
+                                          color: orange;"/>
+                    <p:inputText id="template"
+                                 value="#{templateBuilderFormBean.templateName}"
+                                 onfocus="this.select()">
+                        <p:ajax event="keyup" listener="#{templateBuilderFormBean.validateTemplateName}"/>
+                    </p:inputText>
+                </p:panelGrid>
+
+                <p:outputLabel value="#{res['com.csaszi.templateBuilder.error.templateName']}"
+                               for="template" style="color: red; font-style: oblique"
+                               rendered="#{templateBuilderFormBean.invalidTemplateName}"/>
+
+            </p:tab>
+            <p:tab id="actions"
+                   title="#{res['com.csaszi.template.actions.tab']}"
+                   titleStyle="color: orange">
+
+                <p:dataTable id="actionsDataTable"
+                             value="#{templateBuilderFormBean.actions}"
+                             var="action"
+                             selection="#{templateBuilderFormBean.selectedActions}"
+                             scrollable="true" scrollHeight="350"
+                             rowKey="#{action.actionId}"
+                             rowSelectMode="checkbox"
+                             style="margin-top: 15px;
+                                    margin-bottom: 15px;
+                                    width: 600px">
+
+                    <p:ajax event="rowSelectCheckbox"
+                            listener="#{templateBuilderFormBean.onRowSelect}"
+                            update=":form:growl" />
+                    <p:ajax event="rowUnselectCheckbox"
+                            listener="#{templateBuilderFormBean.onRowUnselect}"
+                            update=":form:growl" />
+
+                    <f:facet name="header">Műveletek</f:facet>
+
+                    <p:column id="checkBoxes" selectionMode="multiple"
+                              style="width:16px; text-align:center"/>
+
+                    <p:column headerText="#{res['com.csaszi.productSheetBuilder.actionName.column']}"
+                              style="width: auto;
+                                     color: limegreen;
+                                     font-size: medium">
+                        <h:outputText value="#{action.actionName}"
+                                      style="color: darkorange"/>
+                    </p:column>
+
+                </p:dataTable>
+
+                <!-- New action persisting -->
+                <p:commandButton id="actionSaver"
+                                 value="#{res['com.csaszi.common.newAction']}"
+                                 onclick="PF('newActionDialog').show();"
+                                 process="@this"
+                                 type="button"/>
+
+                <p:dialog header="Új művelet felvétele"
+                          widgetVar="newActionDialog"
+                          position="150,200"
+                          resizable="false">
+                    <p:panelGrid id="panelGridNewActionDialog"
+                                 columns="2">
+                        <!-- Action type -->
+                        <p:outputLabel for="actionTypeForNewAction"
+                                       value="#{res['com.csaszi.productSheetBuilder.newActionDialog.actionType.label']}"/>
+                        <p:selectOneMenu id="actionTypeForNewAction"
+                                         converter="#{actionTypeConverter}" valueChangeListener="#{templateBuilderFormBean.onActionTypeFilterChange}">
+                            <f:selectItem itemLabel="Válassz"
+                                          itemValue="#{null}"
+                                          noSelectionOption="true"/>
+                            <f:selectItems value="#{templateBuilderFormBean.actionTypes}"
+                                           var="actionTypeFilter"
+                                           itemLabel="#{actionTypeFilter.actionTypeName}"
+                                           itemValue="#{actionTypeFilter}"/>
+                            <p:ajax process="@this" event="change"/>
+                        </p:selectOneMenu>
+                        <!-- New action name -->
+                        <p:outputLabel for="newActionName"
+                                       value="#{res['com.csaszi.template.newActionDialog.action.label']}" />
+                        <p:inputText id="newActionName"
+                                     value="#{templateBuilderFormBean.newActionName}">
+                            <p:ajax event="keyup" process="@this"/>
+                        </p:inputText>
+                    </p:panelGrid>
+                    <p:commandButton id="actionSave"
+                                     value="#{res['com.csaszi.productSheetBuilder.actionSave.button']}"
+                                     action="#{templateBuilderFormBean.saveAction}"
+                                     style="margin-top: 5px"
+                                     update="form:growl form:tabView:actionsDataTable"
+                                     process="@this"/>
+                </p:dialog>
+            </p:tab>
+            <p:tab id="tempActions"
+                   title="#{res['com.csaszi.template.tempActions.tab']}"
+                   titleStyle="color: orange">
+                <!-- Table for check and fill norms -->
+                <p:dataTable id="tempActionsTable" var="tempAction" editable="true"
+                             value="#{templateBuilderFormBean.tempActions}"
+                             scrollable="true" scrollHeight="350"
+                             selection="#{templateBuilderFormBean.selectedTempActionEntity}"
+                             selectionMode="single"
+                             editMode="cell"
+                             draggableRows="true"
+                             rowKey="#{tempAction.pk.actionEntity.actionName}"
+                             style="margin-top: 20px;
+                                    width: 400px;
+                                    height: 400px" >
+
+                    <f:facet name="header">
+                        #{templateBuilderFormBean.templateEntity.templateName} minta műveletei
+                    </f:facet>
+
+                    <p:ajax event="rowReorder"
+                            listener="#{templateBuilderFormBean.onRowReorder}"
+                            update=":form:growl"/>
+
+                    <p:ajax event="cellEdit"
+                            listener="#{templateBuilderFormBean.onCellEdit}"
+                            process="@this"
+                            oncomplete="refreshFooter()"/>
+
+                    <p:column headerText="#{res['com.csaszi.templateBuilder.actionName.column']}"
+                              style="width: auto;
+                                     color: limegreen;
+                                     font-size: medium">
+                        <p:outputLabel value="#{tempAction.pk.actionEntity.actionName}"
+                                       style="color: orange"/>
+                    </p:column>
+
+                    <p:column headerText="#{res['com.csaszi.templateBuilder.norm.column']}"
+                              style="width: auto;
+                                     color: limegreen;
+                                     font-size: medium">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{tempAction.norm}"
+                                              style="color: darkorange"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{tempAction.norm}"
+                                             style="width:100%"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        Total:
+                        <p:outputLabel id="normSum"
+                                       value="#{templateBuilderFormBean.sumOfNorms}"
+                                       style="font-size: medium;
+                                              color: orange;
+                                              float: right"/>
+                    </f:facet>
+                </p:dataTable>
+                <!-- Template persisting -->
+                <p:commandButton value="#{res['com.csaszi.common.save']}"
+                                 process="@this"
+                                 style="margin-top: 5px"
+                                 type="button"
+                                 icon="ui-icon-disk"
+                                 onclick="templateSaver([{name:'page',value:'template.xhtml?faces-redirect=true'}])">
+                </p:commandButton>
+
+                <!--DataTable footer updater -->
+                <p:remoteCommand name="refreshFooter"
+                                 update=":form:tabView:tempActionsTable :form:tabView:tempActionsTable:normSum "/>
+                <p:remoteCommand name="templateSaver"
+                                 action="#{templateBuilderFormBean.saveTemplate}">
+                </p:remoteCommand>
+            </p:tab>
+        </p:tabView>
+
+        <!-- Back to previous page-->
+        <p:commandButton value="#{res['com.csaszi.common.back']}"
+                         action="#{navigator.navigateTo}"
+                         style="margin-top: 10px">
+            <f:param name="page" value="#{res['com.csaszi.pages.template']}?faces-redirect=true"/>
+        </p:commandButton>
+
+    </h:form>
+</h:body>
+</html>

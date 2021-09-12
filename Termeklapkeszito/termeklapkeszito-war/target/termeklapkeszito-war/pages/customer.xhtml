@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body style="background-color: purple">
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true"/>
+
+        <p:focus id="focusCustomerName" for="customerName"/>
+
+        <p:panelGrid id="panelGrid"
+                     style="margin-top: 20px;
+                            margin-bottom: 20px"
+                     columns="2">
+            <p:outputLabel value="#{res['com.csaszi.customer.customerName.label']}"
+                           for="customerName"
+                           style="font-size: medium;
+                                  color: orange;"/>
+            <p:inputText id="customerName"
+                         value="#{customerFormBean.customerName}"
+                         onfocus="this.select()">
+                <p:ajax event="keyup" process="@this"/>
+            </p:inputText>
+        </p:panelGrid>
+
+        <p:panelGrid id="panelGridButtons"
+                     style="margin-top: 20px;
+                            margin-bottom: 20px" columns="2">
+            <p:commandButton value="#{res['com.csaszi.common.save']}"
+                             action="#{customerFormBean.insert}"
+                             update="growl"
+                             process="@this"
+                             oncomplete="refresh();"/>
+
+            <!-- Back to previous page-->
+            <p:commandButton value="#{res['com.csaszi.common.back']}"
+                             action="#{navigator.navigateTo}">
+                <f:param name="page" value="#{res['com.csaszi.pages.landing']}?faces-redirect=true"/>
+            </p:commandButton>
+        </p:panelGrid>
+
+        <!-- Remote command for inputtexts -->
+        <p:remoteCommand name="refresh"
+                         action="#{customerTableBean.init}"
+                         update="form:customers form:focusCustomerName"
+                         resetValues="true"/>
+
+        <p:dataTable id="customers" var="customer" editable="true"
+                     value="#{customerTableBean.customers}"
+                     rows="10" paginator="true"
+                     selection="#{customerTableBean.selectedEntity}"
+                     selectionMode="single"
+                     rowKey="#{customer.customerId}"
+                     style="margin-top: 20px; width: 500px" >
+            <f:facet name="header">Megrendelők</f:facet>
+
+            <p:ajax event="rowEdit" listener="#{customerTableBean.onRowEdit}"
+                    update="form:growl" />
+            <p:ajax event="rowEditCancel"
+                    listener="#{customerTableBean.onRowCancel}"
+                    update="form:growl" />
+
+            <p:column headerText="#{res['com.csaszi.customer.customerName.column']}"
+                      style="width: auto;
+                             color: limegreen;
+                             font-size: medium">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{customer.customerName}"
+                                      style="color: darkorange"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{customer.customerName}"
+                                     style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <p:column style="width:20px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+
+        <!-- Context menu for datatable-->
+        <p:contextMenu for="customers">
+            <p:menuitem value="#{res['com.csaszi.common.delete']}"
+                        update="customers growl"
+                        icon="ui-icon-close"
+                        actionListener="#{customerTableBean.remove}">
+                <p:confirm header="Művelet típus törlése"
+                           message="Biztosan törlöd?"
+                           icon="ui-icon-alert"/>
+            </p:menuitem>
+        </p:contextMenu>
+
+        <p:confirmDialog global="true" showEffect="explode" hideEffect="explode">
+            <p:commandButton value="#{res['com.csaszi.common.yes']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-yes"
+                             icon="ui-icon-check" />
+            <p:commandButton value="#{res['com.csaszi.common.no']}"
+                             type="button"
+                             styleClass="ui-confirmdialog-no"
+                             icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</h:body>
+</html>

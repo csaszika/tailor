@@ -1,0 +1,8 @@
+converters/TemplateConverter.class
+converters/ActionTypeConverter.class
+productSheetGenerator/ProductSheetGenerator.class
+paramContainer/ParamContainer.class
+converters/AbstractEntityConverter.class
+navigator/Navigator.class
+converters/ActionConverter.class
+converters/CustomerConverter.class
